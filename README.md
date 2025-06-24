@@ -55,6 +55,7 @@
 
 ![Dashboard](screenshots/dashboard.png)
 ![Book reading and mini-game](screenshots/bookreader.png)
+![Unity game scene (that included in book learning process)](screenshots/unityscene.png)
 ![Achievements and leaderboard](screenshots/achievements.png)
 
 ## More
@@ -128,6 +129,7 @@
 
 ![Главный экран](screenshots/dashboard.png)
 ![Чтение книги и мини-игра](screenshots/bookreader.png)
+![Unity сцена](screenshots/unityscene.png)
 ![Достижения и лидерборд](screenshots/achievements.png)
 
 ## Подробнее
