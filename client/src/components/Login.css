@@ -1,0 +1,138 @@
+.login-bg {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #826753e3  40%, #815530b2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .login-card {
+    background: #23272a;
+    border-radius: 12px;
+    box-shadow: 0 6px 36px #0007;
+    width: 410px;
+    padding: 48px 40px 32px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .login-card h2 {
+    color: #fff;
+    margin: 0;
+    margin-bottom: 4px;
+    font-weight: 800;
+    font-size: 2.2rem;
+    text-align: center;
+  }
+  
+  .subtitle {
+    color: #dadada;
+    font-size: 1rem;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  
+  .login-form label {
+    color: #b9bbbe;
+    font-size: 0.88rem;
+    margin-bottom: 3px;
+    margin-top: 16px;
+    font-weight: bold;
+    letter-spacing: 0.03em;
+  }
+  
+  .login-form input {
+    background: #2c2f33;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 9px 12px;
+    margin-bottom: 7px;
+    font-size: 1rem;
+    outline: none;
+  }
+  
+  .login-btn {
+    width: 100%;
+    background: #826753e3;
+    color: #fff;
+    border: none;
+    padding: 10px 0;
+    border-radius: 4px;
+    margin-top: 28px;
+    font-weight: 700;
+    font-size: 1.08rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .login-btn:hover {
+    background: #82675377;
+  }
+  
+  .login-bottom {
+    text-align: right;
+    margin-bottom: 5px;
+  }
+  
+  .register-link {
+    margin: 20px 0 0 0;
+    color: #b9bbbe;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+  .register-link a {
+    color: #00aaff;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+  
+  .error {
+    color: #f04747;
+    margin-top: 18px;
+    text-align: center;
+    font-size: 1.05rem;
+  }
+
+  @keyframes appear {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  .login-card, .login-form {
+    animation: appear 0.35s cubic-bezier(.24,1.52,.56,.98);
+  }
+
+  .login-form select {
+    background: #2c2f33;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 7px;
+    font-size: 1rem;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    font-family: inherit;
+    transition: box-shadow 0.15s;
+    box-shadow: 0 1px 2px #0002;
+  }
+  
+  .login-form select:focus {
+    box-shadow: 0 0 0 2px #826753e3, 0 1px 2px #0002;
+  }
+  
+  .login-form select option {
+    background: #23272a;
+    color: #fff;
+  }

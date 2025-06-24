@@ -1,0 +1,107 @@
+@keyframes modal-appear {
+    from { opacity: 0; transform: scale(0.92) translateY(28px);}
+    to   { opacity: 1; transform: scale(1)   translateY(0);}
+  }
+  .modal-fade {
+    animation: modal-appear 0.45s cubic-bezier(.24,1.52,.56,.98);
+  }
+  
+  @keyframes toast-appear {
+    from { opacity: 0; transform: translateY(36px) scale(0.97);}
+    to   { opacity: 1; transform: translateY(0) scale(1);}
+  }
+  .toast-appear {
+    animation: toast-appear 0.35s cubic-bezier(.17,1.4,.57,1.1);
+  }
+  
+  .achievements-modal {
+    background: #fff;
+    color: #222;
+    border-radius: 16px;
+    min-width: 350px;
+    max-width: 510px;
+    box-shadow: 0 8px 28px #1c213677;
+    padding: 36px 32px 27px 32px;
+    position: relative;
+    font-family: inherit;
+    transition: box-shadow 0.22s;
+  }
+  
+  .achievements-modal h2 {
+    margin: 0 0 9px 0;
+    color: #272525;
+    font-weight: 900;
+    font-size: 2rem;
+  }
+  
+  .achievements-modal ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .achievements-modal li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #e0e3ef;
+    padding-bottom: 7px;
+    font-size: 1.09rem;
+    background: #f7f8fd;
+    border-radius: 8px;
+  }
+  
+  .achievements-modal img {
+    border-radius: 8px;
+  }
+
+  @keyframes modal-appear {
+  from { opacity: 0; transform: scale(0.92) translateY(30px);}
+  to   { opacity: 1; transform: scale(1)   translateY(0);}
+}
+
+.modal-fade {
+  animation: modal-appear 0.44s cubic-bezier(.24,1.52,.56,.98);
+  transition: box-shadow 0.23s;
+}
+
+.achievements-modal {
+  background: #826753e3;
+  color: #222;
+  border-radius: 15px;
+  min-width: 350px;
+  max-width: 480px;
+  box-shadow: 0 8px 28px #2226;
+  padding: 38px 30px 28px 30px;
+  font-family: inherit;
+}
+
+.achievements-modal ul {
+  margin: 0 0 9px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.achievements-modal li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 14px;
+  padding-bottom: 5px;
+  background: #f5f6ff;
+  border-radius: 9px;
+}
+
+.achievements-modal img {
+  border-radius: 9px;
+}
+
+@keyframes toast-appear {
+  from { opacity: 0; transform: translateY(30px) scale(0.98);}
+  to   { opacity: 1; transform: translateY(0) scale(1);}
+}
+
+.toast-appear {
+  animation: toast-appear 0.34s cubic-bezier(.17,1.4,.57,1);
+}
