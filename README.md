@@ -54,10 +54,13 @@ It is a modern educational platform for students and teachers, combining reading
    Or use Electron for the desktop version.
 
 ## Screenshots
-
+Dashboard
 ![Dashboard](screenshots/dashboard.png)
-![Book reading and mini-game](screenshots/bookreader.png)
+Book reading and in-book mini-game
+![Book reading and in-book mini-game](screenshots/bookreader.png)
+Unity game scene (that included in book learning process) by chapter
 ![Unity game scene (that included in book learning process)](screenshots/unityscene.png)
+Achievements and leaderboard
 ![Achievements and leaderboard](screenshots/achievements.png)
 
 ## More
@@ -130,9 +133,13 @@ It is a modern educational platform for students and teachers, combining reading
 
 ## Скриншоты
 
+Главный экран
 ![Главный экран](screenshots/dashboard.png)
+Чтение книги и мини-игра
 ![Чтение книги и мини-игра](screenshots/bookreader.png)
-![Unity сцена](screenshots/unityscene.png)
+Unity сцена по книге (главе)
+![Unity сцена по книге](screenshots/unityscene.png)
+Достижения и лидерборд
 ![Достижения и лидерборд](screenshots/achievements.png)
 
 ## Подробнее
