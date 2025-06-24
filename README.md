@@ -1,6 +1,8 @@
+🇬🇧 English
 # LitLearn — Interactive Literature Learning Platform with Gamification
 
-**LitLearn** is a modern educational platform for students and teachers, combining reading of literary works, mini-games, quizzes, achievements, chat, and progress analytics. This project was developed as a graduation thesis using React, Node.js, Electron, MongoDB, and Unity WebGL.
+**LitLearn** is a graduation thesis project (Bachelor’s degree, program 09.03.04 — Software Engineering) developed at Rostov State University of Economics (RSUE).
+It is a modern educational platform for students and teachers, combining reading of literary works, mini-games, quizzes, achievements, chat, and progress analytics. This project was developed using React, Node.js, Electron, MongoDB, and Unity WebGL.
 
 ## Key Features
 
@@ -72,9 +74,10 @@
 
 **LitLearn — making literature engaging!**
 
+🇷🇺 Русский
 # LitLearn — Веб-приложение для интерактивного изучения литературы с геймификацией
 
-**LitLearn** — это современная образовательная платформа для школьников и учителей, сочетающая чтение художественной литературы, мини-игры, квизы, достижения, чаты и аналитику прогресса. Проект реализован как дипломная работа на стеке React, Node.js, Electron, MongoDB и Unity WebGL.
+**LitLearn** — это выпускная квалификационная работа (ВКР, бакалавриат по направлению 09.03.04 — Программная инженерия), выполненная в РГЭУ (РИНХ) — Ростовском государственном экономическом университете. Это современная образовательная платформа для школьников и учителей, сочетающая чтение художественной литературы, мини-игры, квизы, достижения, чаты и аналитику прогресса. Проект реализован как дипломная работа на стеке React, Node.js, Electron, MongoDB и Unity WebGL.
 
 ## Ключевые возможности
 
@@ -139,7 +142,7 @@
 
 ## Авторы
 
-- Дробот Илья Александрович (ПРИ-341, РГЭУ (РИНХ))
+- Дробот Илья Александрович (РГЭУ (РИНХ))
 - Научный руководитель: Е.А. Арапова
 
 ---
