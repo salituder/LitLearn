@@ -10,7 +10,7 @@ import BookReader from './BookReader';
 
 const API_URL = 'http://localhost:5000/api/books';
 
-function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => void }) {
+function Dashboard() {
   const [books, setBooks] = useState<any[]>([]);
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const [selectedChapter, setSelectedChapter] = useState(0);
@@ -301,11 +301,12 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
               color: "#fff"
             }}>Выбор книги</div>
             <div className="lit-book-grid">
-              {books.filter(b => Array.isArray(b.steps) && b.steps.length > 0).map(b => (
+              {[...books].sort((a, b) => Number(/^Жереб[её]нок$/.test(b.title)) - Number(/^Жереб[её]нок$/.test(a.title))).map(b => (
                 <button
                   key={b._id}
                   type="button"
                   className="lit-book-card"
+                  disabled={!Array.isArray(b.steps) || b.steps.length === 0}
                   onClick={() => { setSelectedBook(b._id); setSelectedChapter(0); }}
                 >
                   {b.cover ? (
@@ -319,7 +320,7 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
                   )}
                   <span className="lit-book-title">{b.title}</span>
                   <span className="lit-book-author">{b.author}</span>
-                  <span className="lit-book-action">Читать →</span>
+                  <span className="lit-book-action">{Array.isArray(b.steps) && b.steps.length > 0 ? 'Читать →' : 'Скоро · текст ещё не добавлен'}</span>
                 </button>
               ))}
             </div>
@@ -407,13 +408,6 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
           </div>
         )}
 
-        {!selectedBook && mainView === 'books' && <button
-          type="button"
-          className="lit-game-button"
-          onClick={() => onShowNevskyGame(true)}
-        >
-          Мини-игра по "Невскому проспекту"
-        </button>}
       </div>
     </div>
   );

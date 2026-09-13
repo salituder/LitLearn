@@ -86,7 +86,7 @@ function App() {
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
       <audio id="global-audio" src="/notify.mp3" preload="auto" />
-      <Dashboard onShowNevskyGame={setShowNevskyGame} />
+      <Dashboard />
       <ToastContainer position="bottom-right" autoClose={4000} />
     </div>
   );

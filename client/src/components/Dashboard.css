@@ -76,10 +76,28 @@
   transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
-.lit-book-card:hover {
+.lit-book-card:not(:disabled):hover {
   transform: translateY(-3px);
   border-color: #a7866b;
   box-shadow: 0 8px 24px #0003;
+}
+
+.lit-book-card:disabled {
+  cursor: default;
+  box-shadow: none;
+}
+
+.lit-book-card:disabled .lit-book-action {
+  color: #d3c2b1;
+  font-size: 13px;
+}
+
+.lit-book-card:nth-child(3n) .lit-book-cover-placeholder {
+  background: linear-gradient(145deg, #3d5140, #25322a);
+}
+
+.lit-book-card:nth-child(3n + 1) .lit-book-cover-placeholder {
+  background: linear-gradient(145deg, #3e4e61, #252e3b);
 }
 
 .lit-book-cover {
