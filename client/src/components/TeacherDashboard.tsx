@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { toast } from "react-toastify";
 import Chat from "./Chat";
 import ChatList from "./ChatList";
@@ -32,10 +32,6 @@ export default function TeacherDashboard() {
     fetch('/api/classes/my', { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json()).then(setClasses);
     fetch('/api/books').then(res => res.json()).then(setAllBooks);
-  }, []);
-
-  useEffect(() => {
-    fetch('/api/books/stats').then(res => res.json()).then(setBookStats);
   }, []);
 
   // Получаем данные пользователя (для нижнего бара)
@@ -148,11 +144,11 @@ export default function TeacherDashboard() {
     assignBooks(selectedBookIds.filter((id: string) => !allBookIds.includes(id)));
   };
 
-  const fetchChats = () => {
-    fetch('/api/messages/chats', { headers: { Authorization: `Bearer ${token}` } })
+  const fetchChats = useCallback(() => {
+    fetch('/api/messages', { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json())
-      .then(data => setChats(Array.isArray(data.chats) ? data.chats : []));
-  };
+      .then(data => setChats(Array.isArray(data) ? data : []));
+  }, [token]);
 
   useEffect(() => {
     if (activeTab === "messages") fetchChats();
@@ -388,10 +384,14 @@ export default function TeacherDashboard() {
                   }}
                   onClick={async () => {
                     if (!window.confirm("Удалить этот класс?")) return;
-                    await fetch(`/api/classes/${selectedClass._id}`, {
+                    const res = await fetch(`/api/classes/${selectedClass._id}`, {
                       method: "DELETE",
                       headers: { Authorization: `Bearer ${token}` }
                     });
+                    if (!res.ok) {
+                      toast.error("Не удалось удалить класс.");
+                      return;
+                    }
                     const updated = await fetch(`/api/classes/my`, { headers: { Authorization: `Bearer ${token}` } }).then(res => res.json());
                     setClasses(updated);
                     setSelectedClass(null);

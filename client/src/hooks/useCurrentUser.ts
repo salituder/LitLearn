@@ -6,7 +6,6 @@ export function useCurrentUser() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("TOKEN:", token);
     if (!token) {
       setLoading(false);
       return;

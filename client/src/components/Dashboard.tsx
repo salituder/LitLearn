@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Achievements.css';
+import './Dashboard.css';
 import Leaderboard from './Leaderboard';
 import Friends from './Friends';
 import ChatList from './ChatList';
@@ -99,7 +100,7 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
   }
 
   // Функция для обновления счетчика
-  const updateChatsAndUnread = () => {
+  const updateChatsAndUnread = useCallback(() => {
     const token = localStorage.getItem("token");
     fetch("http://localhost:5000/api/messages", {
       headers: { Authorization: `Bearer ${token}` }
@@ -113,12 +114,15 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
       .catch(err => {
         console.error("Ошибка при обновлении чатов:", err);
       });
-  };
+  }, []);
 
   return (
     <div style={{
       display: 'flex',
-      minHeight: "100vh",
+      height: "100vh",
+      minHeight: 0,
+      flexShrink: 0,
+      overflow: "hidden",
       background: `linear-gradient(135deg, ${COLOR_ACCENT} 42%, ${COLOR_BG_MAIN} 100%)`
     }}>
       {/* Всплывающее уведомление */}
@@ -184,7 +188,10 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
       {/* Левая панель */}
       <div style={{
         background: COLOR_BG_PANEL,
+        width: 250,
         minWidth: 250,
+        flexShrink: 0,
+        overflowY: "auto",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -202,175 +209,39 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
           }}>
             LitLearn
           </div>
-          {!selectedBook && (
-            <>
-              <button
-                style={{
-                  background: COLOR_ACCENT,
-                  border: "none",
-                  color: COLOR_TEXT,
-                  cursor: "pointer",
-                  fontSize: 19,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  margin: "18px 0 24px 18px",
-                  fontWeight: 700,
-                  borderRadius: 8,
-                  padding: "7px 18px",
-                  boxShadow: "0 2px 8px #9d826744",
-                  transition: "background 0.18s"
-                }}
-                title="Выбор книги"
-                onClick={() => setMainView('books')}
-                onMouseOver={e => (e.currentTarget.style.background = COLOR_ACCENT_HOVER)}
-                onMouseOut={e => (e.currentTarget.style.background = COLOR_ACCENT)}
-              >
-                <span role="img" aria-label="books">📚</span> Выбор книги
+          <nav className="lit-sidebar-nav" aria-label="Основная навигация">
+            {selectedBook ? (
+              <button type="button" className="lit-nav-button" onClick={() => setSelectedBook(null)}>
+                <span className="lit-nav-icon" aria-hidden="true">←</span>
+                Назад к книгам
               </button>
-              <button
-                style={{
-                  background: COLOR_ACCENT,
-                  border: "none",
-                  color: COLOR_TEXT,
-                  cursor: "pointer",
-                  fontSize: 19,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  margin: "18px 0 24px 18px",
-                  fontWeight: 700,
-                  borderRadius: 8,
-                  padding: "7px 18px",
-                  boxShadow: "0 2px 8px #9d826744",
-                  transition: "background 0.18s"
-                }}
-                title="Мои достижения"
-                onClick={() => setAchieveOpen(true)}
-                onMouseOver={e => (e.currentTarget.style.background = COLOR_ACCENT_HOVER)}
-                onMouseOut={e => (e.currentTarget.style.background = COLOR_ACCENT)}
-              >
-                <span role="img" aria-label="medal">🏆</span> Мои достижения
-              </button>
-              <button
-                style={{
-                  background: COLOR_ACCENT,
-                  border: "none",
-                  color: COLOR_TEXT,
-                  cursor: "pointer",
-                  fontSize: 19,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  margin: "0 0 24px 18px",
-                  fontWeight: 700,
-                  borderRadius: 8,
-                  padding: "7px 18px",
-                  boxShadow: "0 2px 8px #9d826744",
-                  transition: "background 0.18s"
-                }}
-                title="Друзья"
-                onClick={() => setMainView('friends')}
-                onMouseOver={e => (e.currentTarget.style.background = COLOR_ACCENT_HOVER)}
-                onMouseOut={e => (e.currentTarget.style.background = COLOR_ACCENT)}
-              >
-                <span role="img" aria-label="friends">🤝</span> Друзья
-              </button>
-              <button
-                style={{
-                  background: COLOR_ACCENT,
-                  border: "none",
-                  color: COLOR_TEXT,
-                  cursor: "pointer",
-                  fontSize: 19,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  margin: "0 0 24px 18px",
-                  fontWeight: 700,
-                  borderRadius: 8,
-                  padding: "7px 18px",
-                  boxShadow: "0 2px 8px #9d826744",
-                  transition: "background 0.18s"
-                }}
-                title="Лидерборд"
-                onClick={() => setMainView('leaderboard')}
-                onMouseOver={e => (e.currentTarget.style.background = COLOR_ACCENT_HOVER)}
-                onMouseOut={e => (e.currentTarget.style.background = COLOR_ACCENT)}
-              >
-                <span role="img" aria-label="cup">🥇</span> Лидерборд
-              </button>
-            </>
-          )}
-          {selectedBook && (
-            <button
-              style={{
-                background: COLOR_ACCENT,
-                border: "none",
-                color: COLOR_TEXT,
-                cursor: "pointer",
-                fontSize: 19,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                margin: "18px 0 24px 18px",
-                fontWeight: 700,
-                borderRadius: 8,
-                padding: "7px 18px",
-                boxShadow: "0 2px 8px #9d826744",
-                transition: "background 0.18s"
-              }}
-              title="Назад к выбору книги"
-              onClick={() => setSelectedBook(null)}
-              onMouseOver={e => (e.currentTarget.style.background = COLOR_ACCENT_HOVER)}
-              onMouseOut={e => (e.currentTarget.style.background = COLOR_ACCENT)}
-            >
-              ← Назад к книгам
-            </button>
-          )}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, margin: "20px 0" }}>
-          {!selectedBook && (
-            <button
-              style={{
-                position: "relative",
-                background: COLOR_ACCENT,
-                border: "none",
-                color: COLOR_TEXT,
-                cursor: "pointer",
-                fontSize: 19,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                margin: "0 0 24px 18px",
-                fontWeight: 700,
-                borderRadius: 8,
-                padding: "7px 18px",
-                boxShadow: "0 2px 8px #9d826744",
-                transition: "background 0.18s"
-              }}
-              title="Чаты"
-              onClick={() => setMainView('chats')}
-              onMouseOver={e => (e.currentTarget.style.background = COLOR_ACCENT_HOVER)}
-              onMouseOut={e => (e.currentTarget.style.background = COLOR_ACCENT)}
-            >
-              💬 Чаты
-              {unreadCount > 0 && (
-                <span style={{
-                  position: "absolute",
-                  top: 12,
-                  right: 20,
-                  background: "red",
-                  color: "#fff",
-                  borderRadius: "50%",
-                  padding: "2px 7px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  zIndex: 2
-                }}>{unreadCount}</span>
-              )}
-            </button>
-               )}
-          </div>
+            ) : (
+              ([
+                { id: 'books', icon: '📚', label: 'Выбор книги' },
+                { id: 'achievements', icon: '🏆', label: 'Мои достижения' },
+                { id: 'friends', icon: '🤝', label: 'Друзья' },
+                { id: 'leaderboard', icon: '🥇', label: 'Лидерборд' },
+                { id: 'chats', icon: '💬', label: 'Чаты' }
+              ] as const).map(item => {
+                const active = achieveOpen ? item.id === 'achievements' : mainView === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`lit-nav-button${active ? ' is-active' : ''}`}
+                    aria-pressed={active}
+                    onClick={() => item.id === 'achievements' ? setAchieveOpen(true) : setMainView(item.id)}
+                  >
+                    <span className="lit-nav-icon" aria-hidden="true">{item.icon}</span>
+                    {item.label}
+                    {item.id === 'chats' && unreadCount > 0 && (
+                      <span className="lit-unread-badge" aria-label={`${unreadCount} непрочитанных`}>{unreadCount}</span>
+                    )}
+                  </button>
+                );
+              })
+            )}
+          </nav>
         </div>
 
         {/* Подвал: пользователь */}
@@ -410,6 +281,8 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
       <div style={{
         flex: 1,
         minHeight: 0,
+        minWidth: 0,
+        overflowY: "auto",
         padding: "24px 24px 0 24px",
         background: COLOR_BG_MAIN,
         display: "flex",
@@ -427,57 +300,27 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
               fontWeight: 700,
               color: "#fff"
             }}>Выбор книги</div>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "40px 30px",
-              width: "100%",
-              justifyItems: "center"
-            }}>
+            <div className="lit-book-grid">
               {books.filter(b => Array.isArray(b.steps) && b.steps.length > 0).map(b => (
-                <div key={b._id} style={{
-                  background: COLOR_BG_PANEL,
-                  borderRadius: 12,
-                  boxShadow: "0 4px 16px #0003",
-                  padding: 20,
-                  cursor: "pointer",
-                  width: 700,
-                  transition: "transform 0.1s, box-shadow 0.13s",
-                  textAlign: "center"
-                }}
+                <button
+                  key={b._id}
+                  type="button"
+                  className="lit-book-card"
                   onClick={() => { setSelectedBook(b._id); setSelectedChapter(0); }}
-                  onMouseOver={e => {
-                    e.currentTarget.style.transform = "scale(1.04)";
-                    e.currentTarget.style.boxShadow = "0 8px 24px #82675333";
-                  }}
-                  onMouseOut={e => {
-                    e.currentTarget.style.transform = "scale(1)";
-                    e.currentTarget.style.boxShadow = "0 4px 16px #0003";
-                  }}
                 >
-                  <img
-                    src={b.cover || "https://placehold.co/250x390?text=Нет+обложки"}
-                    style={{
-                      borderRadius: 8,
-                      height: 390,
-                      width: 250,
-                      objectFit: "cover",
-                      marginBottom: 14
-                    }}
-                    alt={b.title}
-                  />
-                  <div style={{
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 18,
-                    marginBottom: 6
-                  }}>{b.title}</div>
-                  <div style={{
-                    color: "#b9bbbe",
-                    fontSize: 15,
-                    fontWeight: 500
-                  }}>{b.author}</div>
-                </div>
+                  {b.cover ? (
+                    <img className="lit-book-cover" src={b.cover} alt={`Обложка: ${b.title}`} />
+                  ) : (
+                    <div className="lit-book-cover lit-book-cover-placeholder" aria-hidden="true">
+                      <span>{b.author}</span>
+                      <strong>{b.title}</strong>
+                      <small>LitLearn</small>
+                    </div>
+                  )}
+                  <span className="lit-book-title">{b.title}</span>
+                  <span className="lit-book-author">{b.author}</span>
+                  <span className="lit-book-action">Читать →</span>
+                </button>
               ))}
             </div>
           </>
@@ -564,15 +407,13 @@ function Dashboard({ onShowNevskyGame }: { onShowNevskyGame: (show: boolean) => 
           </div>
         )}
 
-        <button
+        {!selectedBook && mainView === 'books' && <button
+          type="button"
+          className="lit-game-button"
           onClick={() => onShowNevskyGame(true)}
-          style={{
-            background: "#a7866b", color: "#fff", border: "none", borderRadius: 8,
-            padding: "8px 20px", margin: "16px 0", fontWeight: 700, fontSize: 16
-          }}
         >
           Мини-игра по "Невскому проспекту"
-        </button>
+        </button>}
       </div>
     </div>
   );

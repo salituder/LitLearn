@@ -19,10 +19,18 @@ router.get('/search', auth, async (req, res) => {
 
 router.get('/:id/progress', auth, async (req, res) => {
   const userId = req.params.id;
-  const books = await UserBookProgress.find({ user: userId }).populate('book');
+  const books = await UserBookProgress.find({ user: userId }).populate('book').lean();
   const user = await User.findById(userId).populate('achievements');
+  if (!user) return res.status(404).json({ message: 'User not found' });
   res.json({
-    books,
+    books: books.filter(item => item.book).map(item => {
+      const total = item.book.steps.length;
+      return {
+        ...item,
+        finished: total > 0 && item.currentStep >= total,
+        progress: total > 0 ? Math.min(100, Math.round(item.currentStep / total * 100)) : 0
+      };
+    }),
     achievements: user.achievements
   });
 });

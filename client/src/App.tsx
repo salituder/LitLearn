@@ -35,10 +35,12 @@ function App() {
   useEffect(() => {
     const myUsername = localStorage.getItem("username");
     const userId = localStorage.getItem("userId");
-    if (userId) {
-      socket.emit('register', userId);
-    }
-    socket.on('new_message', (data) => {
+    const registerSocket = () => {
+      if (userId) socket.emit('register', userId);
+    };
+    socket.on('connect', registerSocket);
+    if (socket.connected) registerSocket();
+    const handleMessage = (data: any) => {
       if (data.sender.username !== myUsername) {
         toast.info(`Новое сообщение от ${data.sender.displayName || data.sender.username}: ${data.content}`);
         // Воспроизводить звук только если пользователь уже кликал по странице
@@ -47,9 +49,11 @@ function App() {
           if (audio) audio.play().catch(() => {});
         }
       }
-    });
+    };
+    socket.on('new_message', handleMessage);
     return () => {
-      socket.off('new_message');
+      socket.off('connect', registerSocket);
+      socket.off('new_message', handleMessage);
     };
   }, [audioUnlocked]);
 
@@ -71,7 +75,7 @@ function App() {
 
   // Проверка роли
   if (user.role === "teacher") {
-    return <TeacherDashboard />;
+    return <><TeacherDashboard /><ToastContainer position="bottom-right" autoClose={4000} /></>;
   }
 
   // По умолчанию — ученик

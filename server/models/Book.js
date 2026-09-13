@@ -16,6 +16,7 @@ const BookStepSchema = new mongoose.Schema({
 const BookSchema = new mongoose.Schema({
   title: String,
   author: String,
+  cover: String,
   steps: [BookStepSchema]
 });
 

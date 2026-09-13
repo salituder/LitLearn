@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Жеребёнок — кто есть кто?</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; color: #382c23; background: #382c23; font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 760px; margin: auto; padding: 28px; border-radius: 16px; background: #f6eee8; }
+    h1 { margin: 0 0 8px; font-size: 26px; }
+    p { margin: 0 0 20px; color: #725b47; }
+    .pair { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid #dac9b9; }
+    label { font-weight: 700; }
+    select { width: 100%; padding: 11px 10px; border: 2px solid #c8af97; border-radius: 8px; background: #fff; color: #382c23; font: inherit; font-size: 14px; }
+    .correct select { border-color: #4b965e; }
+    .wrong select { border-color: #bd554c; }
+    button { padding: 11px 18px; border: 0; border-radius: 8px; background: #826753; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+    button:hover { background: #6c523d; }
+    button:disabled { opacity: .5; cursor: default; }
+    button:focus-visible, select:focus-visible { outline: 3px solid #bc976f; outline-offset: 3px; }
+    .actions { display: flex; gap: 12px; margin-top: 22px; }
+    #reset { background: #e1d1c1; color: #382c23; }
+    #result { min-height: 48px; margin: 18px 0 0; font-weight: 600; }
+    @media (max-width: 550px) { body { padding: 12px; } main { padding: 20px; } .pair { grid-template-columns: 1fr; gap: 6px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Кто есть кто?</h1>
+    <p>Сопоставь героев и их роли в первых двух частях рассказа «Жеребёнок».</p>
+    <div id="pairs"></div>
+    <div class="actions">
+      <button id="check" disabled>Проверить</button>
+      <button id="reset">Начать заново</button>
+    </div>
+    <p id="result" role="status" aria-live="polite"></p>
+  </main>
+  <script>
+    const pairs = [
+      ['Трофим', 'Хозяин кобылы, которому приказали убить жеребёнка'],
+      ['Рыжая кобыла', 'Мать жеребёнка'],
+      ['Жеребёнок', 'Родился во время обстрела'],
+      ['Эскадронный', 'Командир, который проверил винтовку Трофима']
+    ];
+    const container = document.getElementById('pairs');
+    const check = document.getElementById('check');
+    const result = document.getElementById('result');
+    let completed = false;
+    function reset() {
+      const options = pairs.map((pair, index) => index);
+      for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+      }
+      container.replaceChildren();
+      pairs.forEach((pair, index) => {
+        const row = document.createElement('div');
+        row.className = 'pair';
+        const label = document.createElement('label');
+        label.htmlFor = 'answer-' + index;
+        label.textContent = pair[0];
+        const select = document.createElement('select');
+        select.id = label.htmlFor;
+        select.add(new Option('Выбери описание…', ''));
+        options.forEach(option => select.add(new Option(pairs[option][1], String(option))));
+        select.addEventListener('change', () => {
+          row.className = 'pair';
+          select.removeAttribute('aria-invalid');
+          result.textContent = '';
+          check.disabled = [...container.querySelectorAll('select')].some(item => item.value === '');
+        });
+        row.append(label, select);
+        container.append(row);
+      });
+      result.textContent = completed ? 'Можно потренироваться ещё раз. Переход к чтению уже открыт.' : '';
+      check.disabled = true;
+    }
+    check.addEventListener('click', () => {
+      let correct = 0;
+      container.querySelectorAll('select').forEach((select, index) => {
+        const valid = Number(select.value) === index;
+        select.parentElement.className = 'pair ' + (valid ? 'correct' : 'wrong');
+        select.setAttribute('aria-invalid', String(!valid));
+        if (valid) correct++;
+      });
+      if (correct === pairs.length) {
+        completed = true;
+        result.textContent = 'Все 4 пары верны! Продолжай чтение кнопкой «Далее» под игрой.';
+        window.parent.postMessage('chapter1_scene_passed', window.location.origin);
+      } else {
+        result.textContent = 'Верно: ' + correct + ' из 4. Исправь пары, выделенные красным, и проверь снова.';
+      }
+    });
+    document.getElementById('reset').addEventListener('click', reset);
+    reset();
+  </script>
+</body>
+</html>

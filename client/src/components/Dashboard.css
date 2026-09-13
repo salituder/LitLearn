@@ -1,0 +1,175 @@
+.lit-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 14px 24px;
+}
+
+.lit-nav-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #f8ece2;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.lit-nav-button:hover {
+  background: #82675380;
+}
+
+.lit-nav-button.is-active {
+  background: #826753;
+  border-color: #a7866b80;
+  box-shadow: inset 3px 0 #d4b492;
+}
+
+.lit-nav-icon {
+  flex: 0 0 24px;
+  text-align: center;
+}
+
+.lit-unread-badge {
+  margin-left: auto;
+  padding: 3px 7px;
+  border-radius: 12px;
+  background: #b34e42;
+  color: #fff;
+  font-size: 12px;
+}
+
+.lit-book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  flex-shrink: 0;
+}
+
+.lit-book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 26px 20px 20px;
+  border: 1px solid #a7866b30;
+  border-radius: 14px;
+  background: #564433;
+  color: #f8ece2;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px #0002;
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+
+.lit-book-card:hover {
+  transform: translateY(-3px);
+  border-color: #a7866b;
+  box-shadow: 0 8px 24px #0003;
+}
+
+.lit-book-cover {
+  width: 170px;
+  height: 260px;
+  flex-shrink: 0;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 4px 6px 14px #0004;
+}
+
+.lit-book-cover-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 24px 16px;
+  border: 1px solid #c9ab7c;
+  background: linear-gradient(145deg, #6b322c, #37231e);
+  color: #ecd8b5;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.lit-book-cover-placeholder span {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.lit-book-cover-placeholder strong {
+  font-size: 22px;
+  overflow-wrap: break-word;
+}
+
+.lit-book-cover-placeholder small {
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.lit-book-title {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.lit-book-author {
+  color: #d3c2b1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lit-book-action {
+  margin-top: auto;
+  padding-top: 10px;
+  color: #e0bc94;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lit-game-button {
+  align-self: flex-start;
+  flex-shrink: 0;
+  margin: 24px 0;
+  padding: 12px 18px;
+  border: 1px solid #a7866b70;
+  border-radius: 10px;
+  background: #564433;
+  color: #f8ece2;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.lit-game-button:hover {
+  background: #826753;
+}
+
+.lit-nav-button:focus-visible,
+.lit-book-card:focus-visible,
+.lit-game-button:focus-visible {
+  outline: 2px solid #e0bc94;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lit-nav-button,
+  .lit-book-card {
+    transition: none;
+  }
+
+  .lit-book-card:hover {
+    transform: none;
+  }
+}

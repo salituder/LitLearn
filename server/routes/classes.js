@@ -33,6 +33,15 @@ router.put('/:id', auth, async (req, res) => {
   res.json(updated);
 });
 
+// Удалить свой класс
+router.delete('/:id', auth, async (req, res) => {
+  if (req.user.role !== 'teacher') return res.status(403).json({ message: 'Forbidden' });
+  const cls = await Class.findOneAndDelete({ _id: req.params.id, teacher: req.user.userId });
+  if (!cls) return res.status(404).json({ message: 'Class not found' });
+  await User.updateMany({ class: cls._id }, { $unset: { class: "" } });
+  res.json({ success: true });
+});
+
 // Добавить/удалить ученика в класс
 router.post('/:id/students', auth, async (req, res) => {
   if (req.user.role !== 'teacher') return res.status(403).json({ message: 'Forbidden' });
@@ -56,7 +65,7 @@ router.delete('/:id/students/:studentId', auth, async (req, res) => {
 
   classObj.students = classObj.students.filter(sid => sid.toString() !== req.params.studentId);
   await classObj.save();
-  await User.findByIdAndUpdate(req.params.studentId, { $unset: { class: "" } });
+  await User.updateOne({ _id: req.params.studentId, class: classObj._id }, { $unset: { class: "" } });
   res.json(classObj);
 });
 
@@ -84,18 +93,20 @@ router.get('/student/books', auth, async (req, res) => {
 
 router.get('/:id/book-stats', auth, async (req, res) => {
   const classId = req.params.id;
-  const cls = await Class.findById(classId).populate('students');
+  if (req.user.role !== 'teacher') return res.status(403).json({ message: 'Forbidden' });
+  const cls = await Class.findOne({ _id: classId, teacher: req.user.userId }).populate('students').populate('books');
+  if (!cls) return res.status(404).json({ message: 'Class not found' });
   const stats = {};
   for (const book of cls.books) {
     let started = 0, finished = 0;
     for (const student of cls.students) {
-      const progress = await UserBookProgress.findOne({ user: student._id, book });
+      const progress = await UserBookProgress.findOne({ user: student._id, book: book._id });
       if (progress) {
         started++;
-        if (progress.finished) finished++;
+        if (book.steps.length > 0 && progress.currentStep >= book.steps.length) finished++;
       }
     }
-    stats[book.toString()] = { started, finished };
+    stats[book._id.toString()] = { started, finished };
   }
   res.json(stats);
 });

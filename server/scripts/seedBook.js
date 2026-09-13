@@ -25,6 +25,7 @@ const steps = [
 const book = new Book({
   title: 'Невский проспект',
   author: 'Н.В. Гоголь',
+  cover: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Nevsky_Prospekt_02_(Kardovsky).jpg',
   steps
 });
 

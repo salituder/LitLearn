@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './BookReader.css';
 
 type Step = {
@@ -24,11 +24,23 @@ export default function BookReader({ bookId }: { bookId: string }) {
   const [quizScore, setQuizScore] = useState(0);
   const [quizAlreadyPassed, setQuizAlreadyPassed] = useState(false);
   const [unityCompleted, setUnityCompleted] = useState(false);
+  const gameRef = useRef<HTMLIFrameElement>(null);
+  const readerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (book) readerRef.current?.scrollIntoView({ block: 'start' });
+  }, [book, bookId, stepIndex]);
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/books/${bookId}`)
       .then(res => res.json())
-      .then(setBook);
+      .then(data => setBook(data && {
+        ...data,
+        steps: data.steps?.map((step: any) => ({
+          ...step,
+          quiz: step.quiz ? (Array.isArray(step.quiz) ? step.quiz : [step.quiz]) : undefined
+        }))
+      }));
 
     const token = localStorage.getItem('token');
     fetch(`http://localhost:5000/api/progress/${bookId}`, {
@@ -44,11 +56,15 @@ export default function BookReader({ bookId }: { bookId: string }) {
     setQuizIndex(0);
     setQuizResults([]);
     setQuizResult(null);
-  }, [stepIndex]);
+    setQuizFinished(false);
+    setQuizScore(0);
+    setQuizAlreadyPassed(false);
+    setUnityCompleted(false);
+  }, [stepIndex, bookId]);
 
   useEffect(() => {
     function handleUnityMessage(event: MessageEvent) {
-      if (event.data === "chapter1_scene_passed") {
+      if (event.data === "chapter1_scene_passed" && event.origin === window.location.origin && event.source === gameRef.current?.contentWindow) {
         // здесь же можно реализовать начисление опыта за прохождение сцены и
         // получение достижения
         setUnityCompleted(true);
@@ -59,6 +75,7 @@ export default function BookReader({ bookId }: { bookId: string }) {
   }, []);
 
   const nextStep = () => {
+    if (!book || stepIndex >= book.steps.length) return;
     setQuizResult(null);
     const newStep = stepIndex + 1;
     setStepIndex(newStep);
@@ -79,11 +96,12 @@ export default function BookReader({ bookId }: { bookId: string }) {
     return <div>В этой книге пока нет интерактивных шагов.</div>;
 
   const step: Step | undefined = book.steps[stepIndex];
+  if (stepIndex === book.steps.length) return <div>Книга завершена!</div>;
   if (!step) return <div>Шаг не найден.</div>;
 
   return (
-    <div>
-      <h2>{step.title}</h2>
+    <div ref={readerRef} style={{ flexShrink: 0 }}>
+      <h2 style={{ color: '#f8ece2' }}>{step.title}</h2>
       {step.type === 'text' && step.text && (
         <>
           <div className="book-text">
@@ -191,7 +209,7 @@ export default function BookReader({ bookId }: { bookId: string }) {
               )}
             </div>
           ) : (
-            <div style={{ textAlign: "center", marginTop: 30 }}>
+            <div style={{ textAlign: "center", margin: "30px auto", padding: 24, maxWidth: 500, borderRadius: 12, background: '#f6eee8', color: '#382c23' }}>
               <h3>Результат квиза</h3>
               <div style={{ fontSize: 20, marginBottom: 12 }}>
                 Правильных ответов: {quizScore} из {step.quiz.length}
@@ -208,15 +226,13 @@ export default function BookReader({ bookId }: { bookId: string }) {
       {step.type === 'unity' && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 24 }}>
           <iframe
+            ref={gameRef}
             src={step.unityScene}
-            title="Unity Scene"
-            width="970"
+            title={step.title}
+            width="100%"
             height="610"
-            style={{ border: 0, display: "block" }}
+            style={{ border: 0, display: "block", maxWidth: 970 }}
           />
-          {unityCompleted && (
-            <button onClick={nextStep} style={{ marginTop: 18 }}>Далее</button>
-          )}
         </div>
       )}
       <div style={{
@@ -276,7 +292,7 @@ export default function BookReader({ bookId }: { bookId: string }) {
         {/* Кнопка "Далее" — показывать только если это не квиз или квиз уже завершён */}
         {(
           step.type === 'text' ||
-          step.type === 'unity' ||
+          (step.type === 'unity' && (!step.unityScene?.startsWith('/games/zherebenok/') || unityCompleted)) ||
           (step.type === 'quiz' && quizFinished)
         ) && (
           <button
@@ -296,7 +312,7 @@ export default function BookReader({ bookId }: { bookId: string }) {
             onMouseOver={e => (e.currentTarget.style.background = "#5fae6e")}
             onMouseOut={e => (e.currentTarget.style.background = "#7fc68e")}
           >
-            Далее →
+            {stepIndex === book.steps.length - 1 ? 'Завершить книгу' : 'Далее →'}
           </button>
         )}
       </div>
