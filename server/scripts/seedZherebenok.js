@@ -6,6 +6,7 @@ const Book = require('../models/Book');
 const bookData = {
   "title": "Жеребёнок",
   "author": "Михаил Александрович Шолохов",
+  "cover": "https://www.100bestbooks.ru/pictures/books/Sholohov_Zherebenok.jpg",
   "steps": [
     {
       "order": 1,
@@ -43,6 +44,10 @@ async function seed() {
       author: bookData.author
     });
     const book = existing || await Book.create(bookData);
+    if (existing && existing.cover !== bookData.cover) {
+      existing.cover = bookData.cover;
+      await existing.save();
+    }
     console.log(JSON.stringify({ database: mongoose.connection.name, created: !existing, id: book._id, title: book.title, steps: book.steps.length }));
   } finally {
     await mongoose.disconnect();

@@ -92,14 +92,6 @@
   font-size: 13px;
 }
 
-.lit-book-card:nth-child(3n) .lit-book-cover-placeholder {
-  background: linear-gradient(145deg, #3d5140, #25322a);
-}
-
-.lit-book-card:nth-child(3n + 1) .lit-book-cover-placeholder {
-  background: linear-gradient(145deg, #3e4e61, #252e3b);
-}
-
 .lit-book-cover {
   width: 170px;
   height: 260px;

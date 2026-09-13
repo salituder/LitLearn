@@ -10,8 +10,15 @@ import BookReader from './BookReader';
 
 const API_URL = 'http://localhost:5000/api/books';
 
+function bookCoverBackground(title: string) {
+  const colors = ['#6b3e37', '#3d5140', '#3e4e61', '#68523a', '#59465b'];
+  const hash = Array.from(title.normalize('NFC')).reduce((value, char) => (value * 31 + char.charCodeAt(0)) | 0, 0);
+  return `linear-gradient(145deg, ${colors[Math.abs(hash) % colors.length]}, #28221e)`;
+}
+
 function Dashboard() {
   const [books, setBooks] = useState<any[]>([]);
+  const [failedCovers, setFailedCovers] = useState<Record<string, string>>({});
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const [selectedChapter, setSelectedChapter] = useState(0);
   const [user, setUser] = useState<{ displayName: string; username: string; xp?: number; level?: number; achievements?: any[] } | null>(null);
@@ -35,9 +42,29 @@ function Dashboard() {
   const COLOR_GREEN = "#7fc68e";
 
   useEffect(() => {
-    fetch(API_URL)
+    const controller = new AbortController();
+    fetch(API_URL, { signal: controller.signal })
       .then(res => res.json())
-      .then(data => setBooks(data));
+      .then(async data => {
+        if (controller.signal.aborted || !Array.isArray(data)) return;
+        setBooks(data);
+        // Книги отображаем сразу, недостающие обложки подгружаем последовательно.
+        for (const book of data.filter(book => !book.cover)) {
+          if (controller.signal.aborted) break;
+          try {
+            const res = await fetch(`${API_URL}/${book._id}/cover`, { signal: controller.signal });
+            if (!res.ok) continue;
+            const { cover } = await res.json();
+            if (cover && !controller.signal.aborted) {
+              setBooks(previous => previous.map(item => item._id === book._id ? { ...item, cover } : item));
+            }
+          } catch {
+            if (controller.signal.aborted) break;
+          }
+        }
+      })
+      .catch(error => { if (!controller.signal.aborted) console.error('Book loading failed:', error); });
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
@@ -309,10 +336,10 @@ function Dashboard() {
                   disabled={!Array.isArray(b.steps) || b.steps.length === 0}
                   onClick={() => { setSelectedBook(b._id); setSelectedChapter(0); }}
                 >
-                  {b.cover ? (
-                    <img className="lit-book-cover" src={b.cover} alt={`Обложка: ${b.title}`} />
+                  {b.cover && failedCovers[b._id] !== b.cover ? (
+                    <img className="lit-book-cover" src={b.cover} alt={`Обложка: ${b.title}`} onError={() => setFailedCovers(previous => ({ ...previous, [b._id]: b.cover }))} />
                   ) : (
-                    <div className="lit-book-cover lit-book-cover-placeholder" aria-hidden="true">
+                    <div className="lit-book-cover lit-book-cover-placeholder" style={{ background: bookCoverBackground(b.title) }} aria-hidden="true">
                       <span>{b.author}</span>
                       <strong>{b.title}</strong>
                       <small>LitLearn</small>

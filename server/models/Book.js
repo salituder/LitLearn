@@ -17,6 +17,7 @@ const BookSchema = new mongoose.Schema({
   title: String,
   author: String,
   cover: String,
+  coverCheckedAt: Date,
   steps: [BookStepSchema]
 });
 
