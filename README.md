@@ -26,7 +26,7 @@ It is a modern educational platform for students and teachers, combining reading
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/literalearn-app.git
+   git clone https://github.com/salituder/literalearn-app.git
    cd literalearn-app
    ```
 
@@ -104,7 +104,7 @@ Achievements and leaderboard
 
 1. Клонируйте репозиторий:
    ```sh
-   git clone https://github.com/yourusername/literalearn-app.git
+   git clone https://github.com/salituder/literalearn-app.git
    cd literalearn-app
    ```
 
